@@ -1,4 +1,4 @@
-import { productModel } from "../models/product.models.js";
+import { productModel } from "../models/product.model.js";
 import mongoose from "mongoose";
 
 export default class ProductManager {
@@ -6,6 +6,10 @@ export default class ProductManager {
         console.log('Working Products')
     }
 
+    getOne = async (id) => {
+        const product = await productModel.findById(id)
+        return product
+    }
 
     getAll = async () => {
         const products = await productModel.find()
@@ -21,16 +25,16 @@ export default class ProductManager {
         return result;
     }
     addDesc = async (id, largeDescription) => {
-                const product = await productModel.findOne({_id:id});
-              if (!product) {
-                throw new Error('Producto no encontrado');
-              }
+        const product = await productModel.findOne({ _id: id });
+        if (!product) {
+            throw new Error('Producto no encontrado');
+        }
 
-              // Actualizar la descripción larga
-              product.largeDescription = largeDescription;
-              await product.save();
+        // Actualizar la descripción larga
+        product.largeDescription = largeDescription;
+        await product.save();
 
-              return product;
+        return product;
     };
     update = async (id, cart) => {
         const result = await productModel.updateOne({ _id: id }, cart);

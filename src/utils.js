@@ -1,14 +1,14 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import jwt from 'jsonwebtoken'
+import { PRIVATE_KEY_JWT } from './config/constants.js';
 // import bcrypt from 'bcrypt'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PRIVATE_KEY = 'Coder47300'
 
 const generateToken = (user) => {
-    const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: '24h' })
+    const token = jwt.sign({ user }, PRIVATE_KEY_JWT, { expiresIn: '24h' })
     return token
 }
 
@@ -18,7 +18,7 @@ const authToken = (req, res, next) => {
 
     const token = authToken.split(' ')[1]
 
-    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
+    jwt.verify(token, PRIVATE_KEY_JWT, (error, credentials) => {
         if (error) return res.status(403).send({ status: 'error', message: 'Not Authorized' })
         req.user = credentials.user;
         next();
