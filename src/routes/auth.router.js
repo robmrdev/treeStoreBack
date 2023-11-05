@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
         if (!user) return res.status(401).send({ status: 'error', message: 'Invalid credentials' })
         delete user.password;
         const accessToken = generateToken(user)
-        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None'}).send({ status: 'success' })
+        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, SameSite: 'None'}).send({ status: 'success' })
         console.log('logged')
     } catch (error) {
         res.status(500).send({ status: 'error', message: 'Login fail' })
