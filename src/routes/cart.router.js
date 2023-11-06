@@ -54,7 +54,7 @@ router.delete('/deleteProduct/:cid/:id', async (req, res) => {
     const user = await userManager.getByEmail(userEmail)
     delete user.password;
     const accessToken = generateToken(user[0])
-    res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None' }).send({ status: 'success' })
+    res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None', secure: true}).send({ status: 'success' });
 })
 
 
@@ -76,7 +76,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
         const user = await userManager.getByEmail(userEmail)
         delete user.password;
         const accessToken = generateToken(user[0])
-        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None' }).send({ status: 'success' })
+        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None', secure: true}).send({ status: 'success' });
 
     } catch (error) {
         console.error('Error al agregar un producto al carrito:', error);
