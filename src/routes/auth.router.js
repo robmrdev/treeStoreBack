@@ -32,16 +32,13 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        console.log('logining in')
         const { email, password } = req.body;
         const users = await userManager.getAll()
         const user = users.find(user => user.email === email && user.password === password)
-
         if (!user) return res.status(401).send({ status: 'error', message: 'Invalid credentials' })
         delete user.password;
         const accessToken = generateToken(user)
-        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None', secure: true}).send({ status: 'success' });
-        console.log('logged')
+        res.send({ status: 'success', payload: accessToken });
     } catch (error) {
         res.status(500).send({ status: 'error', message: 'Login fail' })
     }

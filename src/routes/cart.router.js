@@ -50,33 +50,51 @@ router.post('/', async (req, res) => {
 router.delete('/deleteProduct/:cid/:id', async (req, res) => {
     const { cid, id } = req.params
     const result = await cartManager.delete(cid, id);
-    const userEmail = (jwt.verify(req.cookies.accessTokenCookie,PRIVATE_KEY_JWT)).user.email
+
+    const authorizationHeader = req.headers['authorization'];
+    if (!authorizationHeader) {
+        return res.status(401).send({ status: 'error', message: 'Unauthorized' });
+    }
+    const token = authorizationHeader.split(' ')[1];
+    const decodedToken = jwt.verify(token, PRIVATE_KEY_JWT);
+    const userEmail = decodedToken.user.email;
     const user = await userManager.getByEmail(userEmail)
     delete user.password;
     const accessToken = generateToken(user[0])
-    res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None', secure: true}).send({ status: 'success' });
+    res.send({ status: 'success', payload: accessToken });
 })
 
 
 router.put('/:cid/products/:pid', async (req, res) => {
     const { cid, pid } = req.params
     try {
-        const userEmail = (jwt.verify(req.cookies.accessTokenCookie,PRIVATE_KEY_JWT)).user.email
-        console.log(userEmail)
-        const product = { product: { _id: pid } };
-        const result = await cartManager.addProduct(cid, product);
+
+
+        const authorizationHeader = req.headers['authorization'];
+        if (!authorizationHeader) {
+            return res.status(401).send({ status: 'error', message: 'Unauthorized' });
+        }
+        const token = authorizationHeader.split(' ')[1];
+        const decodedToken = jwt.verify(token, PRIVATE_KEY_JWT);
+        const userEmail = decodedToken.user.email;
 
         const productsById = await productManager.getOne(pid)
         if (productsById === "Not Found") {
             res.status(404).send({ error: 'Id Not Found' });
         }
+
+
+        const product = { product: { _id: pid } };
+        const result = await cartManager.addProduct(cid, product);
+        console.log(`result: ${result}`)
         // const accessTokenCookie = req.cookies.accessTokenCookie;
         // const decoded = jwt.verify(accessTokenCookie,PRIVATE_KEY_JWT)
         // console.log(decoded.user.email);
         const user = await userManager.getByEmail(userEmail)
+        console.log(user)
         delete user.password;
         const accessToken = generateToken(user[0])
-        res.cookie('accessTokenCookie', accessToken, { maxAge: 60 * 60 * 1000, sameSite: 'None', secure: true}).send({ status: 'success' });
+        res.send({ status: 'success', payload: accessToken });
 
     } catch (error) {
         console.error('Error al agregar un producto al carrito:', error);
