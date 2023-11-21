@@ -49,7 +49,6 @@ const productSchema = new mongoose.Schema({
         type: String
     },
     largeDescription: String
-    
 });
 
 productSchema.plugin(mongoosePaginate)

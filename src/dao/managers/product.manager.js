@@ -29,11 +29,8 @@ export default class ProductManager {
         if (!product) {
             throw new Error('Producto no encontrado');
         }
-
-        // Actualizar la descripción larga
         product.largeDescription = largeDescription;
         await product.save();
-
         return product;
     };
     update = async (id, cart) => {

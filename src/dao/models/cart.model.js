@@ -6,10 +6,15 @@ const cartSchema = new mongoose.Schema({
     products:{
         type: [
             {
-                product:{
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'products'
-                },
+                product: String,    
+                // {
+                    // type: mongoose.Schema.Types.ObjectId,
+                    // ref: 'products'
+                // },
+                color: String,
+                price: Number,
+                thumbnail: String,
+                title: String,
                 quantity: {
                     type: Number,
                     default: 1
@@ -19,12 +24,5 @@ const cartSchema = new mongoose.Schema({
         default: []
     }
 });
-
-// cartSchema.pre('find', function (){
-//     this.populate({ 
-//         path: 'products.product',
-//         select: 'title price color.0 thumbnail'
-//     })
-// })
 
 export const cartModel = mongoose.model(cartsCollection, cartSchema);

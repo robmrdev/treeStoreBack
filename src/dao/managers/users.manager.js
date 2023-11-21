@@ -11,7 +11,7 @@ export default class UsersDBManager {
 
     getByEmail = async(email)=>{
         const user = await usersModel.find({email}).lean();
-        return user
+        return user[0]
     }
     getAll = async ()=>{
         const users = await usersModel.find()

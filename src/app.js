@@ -7,11 +7,10 @@ import cartRouter from './routes/cart.router.js'
 import cors from "cors"
 import session from "express-session";
 import cookieParser from "cookie-parser";
-import serverless from "serverless-http";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { originURL } from "./config/constants.js";
-// import { __dirname } from "./utils.js";
+
 const PORT = 8080
 const app = express()
 app.use(express.json())

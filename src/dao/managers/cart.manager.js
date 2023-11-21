@@ -19,52 +19,48 @@ export default class CartManager {
         const result = await cartModel.create(cart);
         return result;
     }
+    // update = async (id, cart) => {
+    //     const mappedCart = cart.map(item => ({
+    //         product: item.product,
+    //         color: item.color,
+    //         price: item.price,
+    //         title: item.title,
+    //         quantity: item.quantity,
+    //         thumbnail: item.thumbnail
+    //     }));
+    //     const result = await cartModel.updateOne({ _id: id }, { $set: { 'products': mappedCart } });
+    //     return result
+    // }
+
     update = async (id, cart) => {
-        const result = await cartModel.updateOne({ _id: id }, cart);
-        return result
+        const result = await cartModel.updateOne({ _id: id }, { $set: { 'products': cart } });
+        // console.log(`CAAAAAARRRRTT:`, cart)
+        // console.log(`RESULT: `, result)
+        return result;
     }
-    delete = async (cid, id) => {
-        const cart = await this.getOne(cid);
-        // Buscar el índice del producto en el carrito que tiene el mismo id que se quiere eliminar.
-        const itemIndex = cart.products.findIndex(product => product.product.toString() === id);
-        if (itemIndex !== -1) {
-            // Si se encuentra el producto en el carrito, lo eliminamos.
-            // console.log(cart.products.splice(itemIndex, 1))
-            cart.products.splice(itemIndex, 1);
-            // Luego, actualizamos el carrito en la base de datos.
-            const result = await this.update(cid, cart);
-    
-            return `Item with id ${id} deleted from cart ${cid}`;
-        } else {
-            // Si no se encuentra el producto, puedes manejar un error o enviar un mensaje adecuado.
-            return `Item with id ${id} not found in cart ${cid}`;
-        }
-    }
-    addProduct = async (cid, product) => {
-        // const cart= await this.getOne(cid)
-        // const existingProductIndex = cart.products.findIndex(p => p.product._id === product.product._id);
 
-        //     if (existingProductIndex === -1) {
-        //         cart.products.push(product)
-        //     } else {
-        //         cart.products[existingProductIndex].quantity += product.quantity;
-        //     }
+    // delete = async (cid, id) => {
+    //     const cart = await this.getOne(cid);
+    //     const itemIndex = cart.products.findIndex(product => product.product.toString() === id);
+    //     if (itemIndex !== -1) {
+    //         cart.products.splice(itemIndex, 1);
+    //         await this.update(cid, cart);
+    //         return `Item with id ${id} deleted from cart ${cid}`;
+    //     } else {
+    //         return `Item with id ${id} not found in cart ${cid}`;
+    //     }
+    // }
+    // addProduct = async (cid, product) => {
+    //     const cart = await this.getOne(cid);
+    //     const existingProductIndex = cart.products.findIndex(p => p.product._id.equals(product.product._id));
+    //     if (existingProductIndex === -1) {
+    //         product.quantity = 1;
+    //         cart.products.push(product);
+    //     } else {
+    //         cart.products[existingProductIndex].quantity = (cart.products[existingProductIndex].quantity || 1) + (product.quantity || 1);
+    //     }
+    //     await this.update(cid, cart);
 
-        //     await this.update(cid, cart );
-        //     return `Product added to cart ${cid}`;
-        const cart = await this.getOne(cid);
-        const existingProductIndex = cart.products.findIndex(p => p.product._id.equals(product.product._id));
-        if (existingProductIndex === -1) {
-            // El producto no existe en el carrito, así que lo agregamos.
-            product.quantity = 1; // Inicializamos la cantidad a 1.
-            cart.products.push(product);
-        } else {
-            // El producto ya existe en el carrito, actualizamos la cantidad.
-            cart.products[existingProductIndex].quantity = (cart.products[existingProductIndex].quantity || 1) + (product.quantity || 1);
-        }
-
-        const result = await this.update(cid, cart);
-
-        return `Product added to cart ${cid}`;
-    }
+    //     return `Product added to cart ${cid}`;
+    // }
 }
