@@ -1,10 +1,15 @@
 import jwt from 'jsonwebtoken'
 import UsersManager from "../dao/managers/users.manager.js";
 import CartManager from "../dao/managers/cart.manager.js";
+import TicketManager from '../dao/managers/ticket.manager.js';
+import ProductManager from '../dao/managers/product.manager.js';
 import { PRIVATE_KEY_JWT } from "../config/constants.js";
 import { getOneProductByIdService } from './product.service.js';
+
+const productManager = new ProductManager
 const cartManager = new CartManager();
 const userManager = new UsersManager();
+const ticketManager = new TicketManager();
 
 
 const getAllCartsService = async () => await cartManager.getAll();
@@ -76,7 +81,6 @@ const deleteOneProductService = async (cid, id, previousCart, authorizationHeade
     delete user.password;
     return user;
 };
-
 const addOneProductToCartService = async (cid, pid, previousCart, authorizationHeader) => {
     const token = authorizationHeader.split(' ')[1];
     const decodedToken = jwt.verify(token, PRIVATE_KEY_JWT);
@@ -87,6 +91,7 @@ const addOneProductToCartService = async (cid, pid, previousCart, authorizationH
     }
     const product = { product: { _id: pid } };
     const cart = await cartManager.getOne(cid);
+
     // console.log(`ID: ${product.product._id}`)
     // console.log(`CART: `, cart)
     // const existingProductIndex = cart.products.findIndex(p => p.product && p.product._id == (product.product._id));
@@ -114,10 +119,41 @@ const addOneProductToCartService = async (cid, pid, previousCart, authorizationH
     return user
 }
 
+const haveStock = async (id)=> {
+    const product = await productManager.getOne(id)
+    if (product.stock > 0) return true
+    else if(product.stock <=0){
+        return false
+    }
+}
+
+const createOrder = async (cid,user) =>{
+
+    const currentProducts = await cartManager.getOne(cid)
+    let totalprice = 0
+    currentProducts.products.forEach(item => {
+        totalprice += item.price * item.quantity;
+        haveStock(item.product)
+    });
+    const orderNumber = Date.now() + Math.floor(Math.random()* 100000 +1)
+    const orderDate = new Date()
+    const order = {
+        code: orderNumber,
+        purchase_dateTime: orderDate,
+        purchaser: user.email,
+        amount: totalprice,
+        products: currentProducts.products
+    }
+    const newTicket = await ticketManager.save(order)
+    return newTicket
+}
+
 export {
     getAllCartsService,
     getOneCartService,
     newCartService,
     deleteOneProductService,
-    addOneProductToCartService
+    addOneProductToCartService,
+    createOrder,
+    haveStock
 }

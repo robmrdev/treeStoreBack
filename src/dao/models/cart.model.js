@@ -6,11 +6,10 @@ const cartSchema = new mongoose.Schema({
     products:{
         type: [
             {
-                product: String,    
-                // {
-                    // type: mongoose.Schema.Types.ObjectId,
+                product:{
+                    type: mongoose.Schema.Types.ObjectId,
                     // ref: 'products'
-                // },
+                },
                 color: String,
                 price: Number,
                 thumbnail: String,

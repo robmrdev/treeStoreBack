@@ -1,4 +1,4 @@
-import { addOneProductToCartService, deleteOneProductService, getAllCartsService, getOneCartService, newCartService } from "../services/cart.service.js";
+import { addOneProductToCartService, createOrder, deleteOneProductService, getAllCartsService, getOneCartService, haveStock, newCartService } from "../services/cart.service.js";
 import { generateToken } from "../utils.js";
 
 const getAllCarts = async (req, res) => {
@@ -49,7 +49,10 @@ const addOneProductToCart = async (req, res) => {
         if (!authorizationHeader) {
             return res.status(401).send({ status: 'error', message: 'Unauthorized' });
         }
-
+        const stock = await haveStock(pid)
+        if (!stock){
+            return res.status(422).send({ status: 'error', message: 'Product not available'})
+        }
 
 
         // const token = authorizationHeader.split(' ')[1];
@@ -74,11 +77,22 @@ const addOneProductToCart = async (req, res) => {
         res.status(500).send({ error: 'Error al agregar un producto al carrito' });
     }
 }
+const checkout =async (req,res)=>{
+    try {
+        const {cid} = req.params
+        const {user} = req.body
+        const newTicket = await createOrder(cid, user)
+        res.send({status: 'success', payload: newTicket})
+    } catch (error) {
+        res.status(500).send({ error: 'Error at checkout' });
+    }
+}
 
 export{
     getAllCarts,
     getOneCart,
     newCart,
     deleteOneProduct,
-    addOneProductToCart
+    addOneProductToCart,
+    checkout
 }

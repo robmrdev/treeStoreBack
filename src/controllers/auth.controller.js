@@ -6,6 +6,7 @@ import { generateToken } from '../utils.js'
 const register = async (req, res) => {
     try {
         const { firstName, lastName, age, email, password } = req.body;
+        console.log(firstName, lastName, age, email, password)
         const user = await registerService(firstName, lastName, age, email, password)
         if (user === 'exists') return res.status(400).send({ status: 'error', message: 'User already exists' })
         if (user) {

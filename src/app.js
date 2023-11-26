@@ -4,6 +4,7 @@ import MongoStore from "connect-mongo";
 import productRouter from './routes/product.router.js'
 import authRouter from './routes/auth.router.js'
 import cartRouter from './routes/cart.router.js'
+import userRouter from './routes/user.router.js'
 import cors from "cors"
 import session from "express-session";
 import cookieParser from "cookie-parser";
@@ -35,6 +36,7 @@ app.use(session({
 
 
 app.use('/', productRouter);
+app.use('/api/users', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/carts', cartRouter)
 
