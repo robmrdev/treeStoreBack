@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import jwt from 'jsonwebtoken'
 import { PRIVATE_KEY_JWT } from './config/constants.js';
+import { fakerEN_US as faker } from '@faker-js/faker'
 // import bcrypt from 'bcrypt'
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,37 @@ const authToken = (req, res, next) => {
         next();
     })
 }
+
+const generateUser = () => {
+    const numberOfProducts = faker.number.int({ min: 1, max: 5 });
+    let products = [];
+    for (let i = 0; i < numberOfProducts; i++) {
+        products.push(generateProducts())
+    }
+    return {
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        age: faker.number.int({min: 18, max: 100}),
+        password: faker.internet.password(),
+        role:  'user',
+        carts: {
+            _id:faker.database.mongodbObjectId(),
+            products: products
+        }
+    }
+}
+const generateProducts = () => {
+        return {
+            product: faker.database.mongodbObjectId(),
+            color: faker.vehicle.color(),
+            price: faker.number.int({min: 20, max: 150}),
+            thumbnail: faker.image.urlPlaceholder({format: 'webp', width: 200, height: 200}),
+            title: faker.commerce.productName(),
+            quantity: faker.number.int({min:1, max:10}),
+            _id: faker.database.mongodbObjectId()
+        }
+}
 // const createHash = password =>
 //     bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
@@ -33,6 +65,7 @@ const authToken = (req, res, next) => {
 export {
     generateToken,
     authToken,
+    generateUser,
     // createHash,
     // isValidPassword,
     __dirname

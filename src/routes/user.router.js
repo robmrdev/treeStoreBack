@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {UsersManager} from "../dao/factory.js";
+import { generateUser } from "../utils.js";
 
 /* ESTE ROUTER ES UNICAMENTE PARA PROBAR CAMBIO ENTRE MEMORY Y DB */
 
@@ -34,6 +35,14 @@ router.post('/newuser/', async (req, res) => {
     } catch (error) {
         res.status(500).send({ status: 'error', message: error.message })
     }
+})
+
+router.get('/mockingproducts', (req,res)=>{
+    let users =[];
+    for(let i=0; i< 100; i++){
+        users.push(generateUser())
+    }
+    res.send({status: 'success', payload: users})
 })
 
 export default router;

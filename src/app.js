@@ -16,7 +16,7 @@ const PORT = 8080
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({origin: originURL,credentials: true})); /* al anadir {['http://XXXXX.com]} adentro del parametro de cors se bloquean las peticiones unicamente desde ese sitio*/
+app.use(cors({origin: originURL,credentials: true})); 
 try {
     await mongoose.connect('mongodb+srv://robmrdev:83VBnd4D5JO1D4Yb@cardigancluster.kqxx3hg.mongodb.net/cardigansDB?retryWrites=true&w=majority')
     console.log('DB connected')
@@ -33,7 +33,6 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
 }))
-
 
 app.use('/', productRouter);
 app.use('/api/users', userRouter)
