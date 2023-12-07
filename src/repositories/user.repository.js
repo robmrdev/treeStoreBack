@@ -8,7 +8,6 @@ export default class UsersRepository {
     createUser = async (user) =>{
         const newUser = new UsersDto(user);
         const result = await this.dao.save(newUser)
-        console.log(`result: `, result)
         return result
     }
 }

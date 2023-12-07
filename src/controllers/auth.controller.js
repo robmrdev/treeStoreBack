@@ -1,34 +1,52 @@
 
 import { loginService, registerService } from "../services/auth.service.js";
 import { generateToken } from '../utils.js'
+import CustomError from "../middlewares/errors/CustomError.js";
+import { generateUserErrorInfo, loginUserErrorInfo } from "../middlewares/errors/info.js";
+import EErrors from "../middlewares/errors/enums.js";
 
 
 const register = async (req, res) => {
-    try {
         const { firstName, lastName, age, email, password } = req.body;
+        if (!firstName || !lastName || !age || !email) {
+            throw CustomError.createError({
+                name: 'userError',
+                cause: generateUserErrorInfo({
+                    firstName,
+                    lastName,
+                    age,
+                    email
+                }),
+                message: 'Error on Register User',
+                code: EErrors.INVALID_TYPE_ERROR
+            })
+        }
         const user = await registerService(firstName, lastName, age, email, password)
         if (user === 'exists') return res.status(400).send({ status: 'error', message: 'User already exists' })
         if (user) {
-            res.send({ status: 'success', message:'Register Ok' })
+            res.send({ status: 'success', message: 'Register Ok' })
         } else {
             res.status(404).send({ status: 'error', message: 'Register Fails' });
         }
-    } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
-    }
+    
 }
 
 const login = async (req, res) => {
-    try {
+    // try {
         const { email, password } = req.body;
         const previousCart = req.cookies['provisionalCart']
         const user = await loginService(email, password, previousCart)
-        if (user === 'invalid') return res.status(401).send({ status: 'error', message: 'Invalid credentials' }) 
+        if (user === 'invalid') throw CustomError.createError({
+            name: 'LoginError',
+            cause: loginUserErrorInfo(),
+            message: 'Error on Login User',
+            code: EErrors.USER_NOT_FOUND
+        })
         const accessToken = generateToken(user)
         res.send({ status: 'success', payload: accessToken });
-    } catch (error) {
-        res.status(500).send({ status: 'error', message: 'Login fail' })
-    }
+    // } catch (error) {
+    //     res.status(500).send({ status: 'error', message: 'Login fail' })
+    // }
 }
 
 const getUser = (req, res) => {

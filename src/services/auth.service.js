@@ -1,6 +1,5 @@
 import UsersManager from "../dao/managers/users.manager.js";
 import CartManager from "../dao/managers/cart.manager.js";
-import UsersDto from "../DTOs/users.dto.js";
 import { usersRepository } from "../repositories/index.js";
 
 const userManager = new UsersManager
@@ -8,8 +7,6 @@ const cartManager = new CartManager();
 
 const registerService = async (firstName, lastName, age, email, password) => {
     const exists = await userManager.getByEmail(email)
-    console.log(exists)
-    console.log(`register`)
     let user
     if (exists == undefined) {
         user = await usersRepository.createUser({
@@ -19,14 +16,6 @@ const registerService = async (firstName, lastName, age, email, password) => {
             email,
             password
         })
-        // user = await userManager.save({
-        //     firstName,
-        //     lastName,
-        //     age,
-        //     email,
-        //     password
-        // })
-        // await userManager.save(user)
     } else {
         user = 'exists'
     }

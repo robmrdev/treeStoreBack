@@ -91,18 +91,6 @@ const addOneProductToCartService = async (cid, pid, previousCart, authorizationH
     }
     const product = { product: { _id: pid } };
     const cart = await cartManager.getOne(cid);
-
-    // console.log(`ID: ${product.product._id}`)
-    // console.log(`CART: `, cart)
-    // const existingProductIndex = cart.products.findIndex(p => p.product && p.product._id == (product.product._id));
-    // console.log(`EXISTING PRODUCT: ${existingProductIndex}`)
-    // if (existingProductIndex === -1) {
-    //     product.quantity = 1;
-    //     cart.products.push(product);
-    // } else {
-    //     cart.products[existingProductIndex].quantity = (cart.products[existingProductIndex].quantity || 1) + (product.quantity || 1);
-    // }
-    // console.log(`NEW CART ${cart}`)
     const newCart = JSON.parse(previousCart).products.map((e) => ({
         product: e._id,
         color: e.color,
@@ -111,9 +99,7 @@ const addOneProductToCartService = async (cid, pid, previousCart, authorizationH
         thumbnail: e.thumbnail,
         quantity: e.quantity,
     }));
-    // console.log(`NEW CARTTT:`,newCart)
     await cartManager.update(cid, newCart);
-    // await cartManager.addProduct(cid, product);
     const user = await userManager.getByEmail(userEmail)
     delete user.password;
     return user
