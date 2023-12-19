@@ -17,7 +17,7 @@ const PORT = 8080
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-// app.use(cors({origin: originURL,credentials: true})); 
+app.use(cors({origin: originURL,credentials: true})); 
 try {
     await mongoose.connect('mongodb+srv://robmrdev:83VBnd4D5JO1D4Yb@cardigancluster.kqxx3hg.mongodb.net/cardigansDB?retryWrites=true&w=majority')
     console.log('DB connected')
