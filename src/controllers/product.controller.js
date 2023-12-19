@@ -79,6 +79,15 @@ const updateDesc = async (req, res) => {
     }
 }
 
+const loggerTest = async (req, res) =>{
+    req.logger.fatal('Test Fatal')
+    req.logger.error('Test Error')
+    req.logger.warning('Test Warning')
+    req.logger.info('Test Info')
+    req.logger.http('Test Http')
+    req.logger.debug('Test Debug')
+}
+
 export {
     getProductsPaginated,
     getOneProductByTittle,
@@ -86,5 +95,6 @@ export {
     createProduct,
     getOneProductById,
     deleteProduct,
-    updateDesc
+    updateDesc,
+    loggerTest
 }

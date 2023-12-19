@@ -1,5 +1,5 @@
 import { addOneProductToCartService, createOrder, deleteOneProductService, getAllCartsService, getOneCartService, haveStock, newCartService } from "../services/cart.service.js";
-import { generateToken } from "../utils.js";
+import { generateToken } from "../utils/utils.js";
 
 const getAllCarts = async (req, res) => {
     try {

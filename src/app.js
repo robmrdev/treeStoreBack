@@ -12,17 +12,19 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { originURL } from "./config/constants.js";
 import errorHandler from './middlewares/errors/index.js'
+import { addLogger } from "./utils/logger.js";
 
 const PORT = 8080
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({origin: originURL,credentials: true})); 
+app.use(cors({ origin: originURL, credentials: true }));
+app.use(addLogger)
+
 try {
     await mongoose.connect('mongodb+srv://robmrdev:83VBnd4D5JO1D4Yb@cardigancluster.kqxx3hg.mongodb.net/cardigansDB?retryWrites=true&w=majority')
-    console.log('DB connected')
 } catch (error) {
-    console.log(error.message)   
+    console.log(error.message)
 }
 
 app.use(session({
@@ -45,7 +47,7 @@ app.use(errorHandler)
 initializePassport();
 app.use(passport.initialize())
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log('Server on 8080')
 })
 

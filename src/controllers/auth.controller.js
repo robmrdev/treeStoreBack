@@ -1,6 +1,6 @@
 
 import { loginService, registerService } from "../services/auth.service.js";
-import { generateToken } from '../utils.js'
+import { generateToken } from '../utils/utils.js'
 import CustomError from "../middlewares/errors/CustomError.js";
 import { generateUserErrorInfo, loginUserErrorInfo } from "../middlewares/errors/info.js";
 import EErrors from "../middlewares/errors/enums.js";

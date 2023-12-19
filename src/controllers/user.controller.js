@@ -30,6 +30,12 @@ const newUser = async (req, res) => {
 }
 
 const mockingproducts = (req,res)=>{
+    req.logger.fatal('prueba fatal')
+    req.logger.error('prueba error')
+    req.logger.warning('prueba warn')
+    req.logger.info('prueba info')
+    req.logger.http('prueba debug')
+    req.logger.debug('prueba debug')
     const users = mockingProductsService()
     res.send({status: 'success', payload: users})
 }

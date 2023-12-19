@@ -1,5 +1,5 @@
 import {UsersManager} from "../dao/factory.js";
-import { generateUser } from "../utils.js";
+import { generateUser } from "../utils/utils.js";
 
 const userManager = new UsersManager()
 

@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import jwt from 'jsonwebtoken'
-import { PRIVATE_KEY_JWT } from './config/constants.js';
+import { PRIVATE_KEY_JWT } from '../config/constants.js';
 import { fakerEN_US as faker } from '@faker-js/faker'
 // import bcrypt from 'bcrypt'
 
