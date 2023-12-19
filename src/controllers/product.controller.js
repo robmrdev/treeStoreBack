@@ -8,6 +8,7 @@ const getProductsPaginated = async (req, res) => {
         const payload = await getProductsPaginatedService(user, page, limit, query, sort, subCat)
         res.send({ status: 'succes', payload: payload })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -18,6 +19,7 @@ const getOneProductByTittle = async (req, res) => {
     try {
         res.send({ status: 'success', payload: product[0] })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -27,6 +29,7 @@ const getAllProducts = async (req, res) => {
     try {
         res.send({ status: 'success', payload: products })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -37,6 +40,7 @@ const createProduct = async (req, res) => {
     try {
         res.send({status: 'success', payload: newProduct})
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
     // const newUser = new productModel(product);
@@ -50,6 +54,7 @@ const getOneProductById = async (req, res) => {
     try {
         res.send({ status: 'success', payload: product })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -60,6 +65,7 @@ const deleteProduct = async (req, res) => {
     try {
         res.send({ status: 'succes', payload: result })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -72,9 +78,11 @@ const updateDesc = async (req, res) => {
         if (updatedProduct) {
             res.send({ status: 'success', payload: updatedProduct });
         } else {
+            req.logger.warning('Product not found')
             res.status(404).send({ status: 'error', message: 'Producto no encontrado' });
         }
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: 'Error on server side' });
     }
 }

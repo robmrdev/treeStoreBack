@@ -22,10 +22,13 @@ const register = async (req, res) => {
             })
         }
         const user = await registerService(firstName, lastName, age, email, password)
-        if (user === 'exists') return res.status(400).send({ status: 'error', message: 'User already exists' })
+        if (user === 'exists') {
+            req.logger.warning('User Exists')
+            return res.status(400).send({ status: 'error', message: 'User already exists' })}
         if (user) {
             res.send({ status: 'success', message: 'Register Ok' })
         } else {
+            req.logger.fatal('Error on server side')
             res.status(404).send({ status: 'error', message: 'Register Fails' });
         }
     

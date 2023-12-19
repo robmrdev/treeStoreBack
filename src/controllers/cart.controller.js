@@ -6,6 +6,7 @@ const getAllCarts = async (req, res) => {
         const carts = await getAllCartsService();
         res.send({ status: 'succes', payload: carts });
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', error: error.message });
     }
 }
@@ -15,6 +16,7 @@ const getOneCart = async (req, res) => {
         const result = await getOneCartService(id)
         res.send({ status: 'succes', payload: result })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', error: error.message });
     }
 }
@@ -24,6 +26,7 @@ const newCart = async (req, res) => {
         const result = await newCartService(products)
         res.status(201).send({ status: 'succes', payload: result });
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', error: error.message });
     }
 }
@@ -33,6 +36,7 @@ const deleteOneProduct = async (req, res) => {
     const previousCart = req.cookies['provisionalCart']
     const authorizationHeader = req.headers['authorization'];
     if (!authorizationHeader) {
+        req.logger.error('Unauthorized')
         return res.status(401).send({ status: 'error', message: 'Unauthorized' });
     }
     const user = await deleteOneProductService(cid, id, previousCart, authorizationHeader);
@@ -47,10 +51,12 @@ const addOneProductToCart = async (req, res) => {
     try {
         const authorizationHeader = req.headers['authorization'];
         if (!authorizationHeader) {
+            req.logger.error('Unauthorized')
             return res.status(401).send({ status: 'error', message: 'Unauthorized' });
         }
         const stock = await haveStock(pid)
         if (!stock){
+            req.logger.warning('Product not Available')
             return res.status(422).send({ status: 'error', message: 'Product not available'})
         }
 
@@ -73,7 +79,7 @@ const addOneProductToCart = async (req, res) => {
         const accessToken = generateToken(user)
         res.send({ status: 'success', payload: accessToken });
     } catch (error) {
-        console.error('Error al agregar un producto al carrito:', error);
+        req.logger.fatal('Error on server side')
         res.status(500).send({ error: 'Error al agregar un producto al carrito' });
     }
 }
@@ -84,6 +90,7 @@ const checkout =async (req,res)=>{
         const newTicket = await createOrder(cid, user)
         res.send({status: 'success', payload: newTicket})
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ error: 'Error at checkout' });
     }
 }

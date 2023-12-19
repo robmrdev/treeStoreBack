@@ -5,6 +5,7 @@ const getUser = async (req, res) => {
     try {
         res.send({ status: 'success', payload: users })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
@@ -15,6 +16,7 @@ const getUserByEmail = async (req, res) => {
     try {
         res.send({ status: 'success', payload: user })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: 'error' })
     }
 }
@@ -25,6 +27,7 @@ const newUser = async (req, res) => {
     try {
         res.send({ status: 'success', payload: newUser })
     } catch (error) {
+        req.logger.fatal('Error on server side')
         res.status(500).send({ status: 'error', message: error.message })
     }
 }
